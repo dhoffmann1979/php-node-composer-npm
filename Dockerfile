@@ -10,6 +10,7 @@ RUN apt update && apt install -y \
         libpng-dev \
         gnupg \
         build-essential \
+        zip unzip \
         zlib1g-dev \
 
   # node & npm
