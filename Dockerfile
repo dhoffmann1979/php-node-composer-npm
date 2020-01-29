@@ -1,5 +1,7 @@
 FROM php:7.2
-LABEL maintainer="m.pich@outlook.com"
+LABEL maintainer="d.hoffmann@mac.com"
+
+ENV DEPLOYER_VERSION=6.7.3
 
 RUN apt-get update && apt-get install -y \
         git \
@@ -11,10 +13,12 @@ RUN apt-get update && apt-get install -y \
         gnupg \
         build-essential \
         zip unzip \
-        zlib1g-dev
+        zlib1g-dev \
+        rsync \
+        openssh-client
 
 # node
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
       && apt-get install -y nodejs
 
 # update npm to last version
@@ -51,3 +55,11 @@ RUN pecl install memcached-3.0.3 \
   && docker-php-ext-enable memcached
 
 RUN docker-php-source delete
+
+# Install Deployer
+COPY install_deployer.php /
+
+RUN php /install_deployer.php
+RUN rm /install_deployer.php
+
+RUN composer global require deployer/recipes --dev
